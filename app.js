@@ -1,6 +1,11 @@
+var WALGREENS_URL = 'https://services-qa.walgreens.com';
+var WALGREENS_PATH = '/api/util/mweb5url';
+var WALGREENS_API_KEY = "uEgdGWwKeWc6WPekIyotrgntvTHhYtaz";
+
+var request         =       require("request");
 var express         =       require("express");
 var multer          =       require('multer');
-var bodyParser          =       require('body-parser');
+var bodyParser      =       require('body-parser');
 var app             =       express();
 
 
@@ -84,6 +89,32 @@ app.post('/addevent', function (req, res) {
         });
 });
 
+app.post('/print', function (req, res) {
+    var sql    = 'SELECT * FROM history WHERE eventid=' + connection.escape(req.body.imageId);
+    var query = connection.query(sql, function(err, result) {
+          var data = {
+            "apiKey" : WALGREENS_API_KEY,
+            "transaction" : "photoCheckoutv2",
+            "expiryTime"  :"20",
+            "act" : "mweb5Url",
+            "view" : "mweb5UrlJSON",
+            "channelInfo" : "web",
+            "images" : [
+              result[0].ImageURL
+            ],
+          };
+
+          request({
+            url: WALGREENS_URL + WALGREENS_PATH,
+            method: "POST",
+            json: data
+          }, function(error, response, body){
+            console.log(body);
+            res.send(body.landingUrl)
+          });
+
+  });
+});
 
 // get the app environment from Cloud Foundry
 var appEnv = cfenv.getAppEnv();
