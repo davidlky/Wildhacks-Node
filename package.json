@@ -3,13 +3,17 @@
   "version": "1.0.0",
   "description": "Wildhacks project",
   "main": "app.js",
+  "engines": {
+    "node": "4.2.1"
+  },
   "dependencies": {
-    "express": "^4.13.3",
-    "latest": "^0.2.0",
-    "multer": "^1.1.0",
-    "cfenv": "1.0.x",
     "body-parser": "^1.14.1",
-    "mysql": "2.9.0"
+    "cfenv": "1.0.x",
+    "express": "^4.13.3",
+    "multer": "^1.1.0",
+    "mysql": "2.9.0",
+    "mysql2": "0.15.8",
+    "request": "2.67.*"
   },
   "devDependencies": {},
   "scripts": {

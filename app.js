@@ -22,7 +22,9 @@ var storage = multer.diskStorage({
   }
 });
 
-var mysql1      = require('mysql');
+
+/**Database **/
+var mysql1      = require('mysql2');
 
 var connection = mysql1.createConnection({
   host     : 'us-cdbr-iron-east-03.cleardb.net',
@@ -36,58 +38,82 @@ var upload      =   multer({ storage:storage});
 // for more info, see: https://www.npmjs.com/package/cfenv
 var cfenv = require('cfenv');
 
+/**Root**/
 app.get('/', function (req, res) {
   res.sendFile(__dirname + "/index.html");
 });
 
+//Upload File
 app.post('/fileupload', upload.single('photo'), function (req, res, next) {
+
+    connection.connect();
     var post  = {EventID: req.body.eventID, UserID:req.body.userID, ImageURL: req.file.filename};
     var query = connection.query('INSERT INTO HISTORY SET ?', post, function(err, result) {
             res.send(result);
+
         });
+
+
 });
 
+//Get file under events
 app.get('/files/:id', function (req, res, next) {
+
+  connection.connect();
+
     var query = connection.query('SELECT *  from HISTORY where EventID='+connection.escape(req.params.id), function(err, result) {
+        res.send(result);
 
-            res.send(result);
-        });
+    });
 });
 
+//get all files
 app.get('/files', function (req, res, next) {
+  connection.connect();
     var query = connection.query('SELECT *  from HISTORY', function(err, result) {
-          res.send(result);
-        });
+      res.send(result);
+
+    });
 });
 
-
-
+//events info for id
 app.get('/events/:id', function (req, res) {
+
+  connection.connect();
     var sql    = 'SELECT * FROM event WHERE EventID = ' + connection.escape(req.params.id);
     var query = connection.query(sql, function(err, result) {
-          res.send(result);
-        });
+      res.send(result);
+
+    });
 });
 
-
+//get all events
 app.get('/events/', function (req, res) {
+
+  connection.connect();
     var sql    = 'SELECT * FROM event';
     var query = connection.query(sql, function(err, result) {
-          res.send(result);
-        });
+      res.send(result);
+
+    });
 });
 
+//add event
 app.get('/addevent', function (req, res) {
   res.sendFile(__dirname + "/views/events/add.html");
 });
 
+//add event (post)
 app.post('/addevent', function (req, res) {
+  connection.connect();
     var post  = {name: req.body.name, details:req.body.description, location : req.body.location};
     var query = connection.query('INSERT INTO EVENT SET ?', post, function(err, result) {
-          res.send(result);
-        });
+      res.send(result);
+
+    });
 });
 
+//Walgreeeeeeen
 app.post('/print', function (req, res) {
     var json;
     for (key in req.body){
@@ -132,22 +158,23 @@ app.listen(3000, '0.0.0.0', function() {
     var host = (process.env.VCAP_APP_HOST || 'localhost');
     // print a message when the server starts listening
   console.log("server starting on " + port + host);
+  //db setup
+  connection.connect();
 
-connection.connect();
+  // var query = connection.query("DROP TABLE HISTORY", function(err, result) {
+  //       console.log(result);
+  //     });
 
-var query = connection.query("DROP TABLE HISTORY", function(err, result) {
-      console.log(result);
-    });
+  // var query = connection.query("DROP TABLE event", function(err, result) {
+  //       console.log(result);
+  //     });
 
-var query = connection.query("DROP TABLE event", function(err, result) {
-      console.log(result);
-    });
+  var query = connection.query("CREATE TABLE EVENT (EventID int NOT NULL AUTO_INCREMENT, Name varchar(255) NOT NULL, details varchar(500), location varchar(255), PRIMARY KEY (EventID));", function(err, result) {
+        console.log(result);
+      });
 
-var query = connection.query("CREATE TABLE EVENT (EventID int NOT NULL AUTO_INCREMENT, Name varchar(255) NOT NULL, details varchar(500), location varchar(255), PRIMARY KEY (EventID));", function(err, result) {
-      console.log(result);
-    });
+  var query = connection.query("CREATE TABLE HISTORY (ImageID int NOT NULL AUTO_INCREMENT, ImageURL varchar(255) NOT NULL, EventID Integer, UserID varchar(255), Timestamp TIMESTAMP, PRIMARY KEY (ImageID));", function(err, result) {
+        console.log(result);
+      });
 
-var query = connection.query("CREATE TABLE HISTORY (ImageID int NOT NULL AUTO_INCREMENT, ImageURL varchar(255) NOT NULL, EventID Integer, UserID varchar(255), Timestamp TIMESTAMP, PRIMARY KEY (ImageID));", function(err, result) {
-      console.log(result);
-    });
 });
