@@ -114,13 +114,8 @@ app.post('/addevent', function (req, res) {
 });
 
 //Walgreeeeeeen
-app.post('/print', function (req, res) {
-    var json;
-    for (key in req.body){
-      json = key;
-    }
-    json = JSON.parse(json);
-    var sql    = 'SELECT * FROM history WHERE eventid=' + connection.escape(json["imageId"]);
+app.get('/print/:id', function (req, res) {
+    var sql    = 'SELECT * FROM history WHERE eventid=' + connection.escape(req.params.id);
     var query = connection.query(sql, function(err, result) {
       var data = {
        "apiKey": WALGREENS_API_KEY,
