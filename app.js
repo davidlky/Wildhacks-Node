@@ -114,7 +114,7 @@ app.post('/addevent', function (req, res) {
 
 //Walgreeeeeeen
 app.get('/print/:id', function (req, res) {
-    var sql    = 'SELECT * FROM history WHERE eventid=' + connection.escape(req.params.id);
+    var sql    = 'SELECT * FROM history WHERE ImageID=' + connection.escape(req.params.id);
     var query = connection.query(sql, function(err, result) {
       var data = {
        "apiKey": WALGREENS_API_KEY,
@@ -128,11 +128,12 @@ app.get('/print/:id', function (req, res) {
        "affNotes": "",
        "expiryTime": "",
        "images": [
-          result.ImageURL
+          "http://polarfeed.mybluemix.net/uploads/" + result[0]["ImageURL"]
        ],
        "channelInfo": "",
        "callBackLink": ""
-     }
+     };
+     console.log(data);
      request({
        url: WALGREENS_URL,
        method: 'POST',
