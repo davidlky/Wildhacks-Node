@@ -109,7 +109,6 @@ app.post('/addevent', function (req, res) {
     var post  = {name: req.body.name, details:req.body.description, location : req.body.location};
     var query = connection.query('INSERT INTO EVENT SET ?', post, function(err, result) {
       res.send(result);
-
     });
 });
 
@@ -129,7 +128,7 @@ app.get('/print/:id', function (req, res) {
        "affNotes": "",
        "expiryTime": "",
        "images": [
-          result[0].ImageURL
+          result.ImageURL
        ],
        "channelInfo": "",
        "callBackLink": ""
@@ -139,7 +138,7 @@ app.get('/print/:id', function (req, res) {
        method: 'POST',
        json: data
      }, function(error, response, body){
-       res.send(response.body.landingUrl);
+       res.send(response.body.landingUrl + '&token=' + response.body.token);
      })
    });
  });
