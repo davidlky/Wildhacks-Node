@@ -89,7 +89,7 @@ app.post('/addevent', function (req, res) {
 var appEnv = cfenv.getAppEnv();
 
 // start server on the specified port and binding host
-app.listen(appEnv.port, '0.0.0.0', function() {
+app.listen(3000, '0.0.0.0', function() {
     var port = (process.env.VCAP_APP_PORT || 3000);
     var host = (process.env.VCAP_APP_HOST || 'localhost');
     // print a message when the server starts listening
