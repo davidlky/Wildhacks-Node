@@ -1,0 +1,31 @@
+{
+  "name": "imager",
+  "version": "1.0.0",
+  "description": "Wildhacks project",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.13.3",
+    "latest": "^0.2.0",
+    "multer": "^1.1.0",
+    "cfenv": "1.0.x",
+    "body-parser": "^1.14.1",
+    "mysql": "2.9.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidlky/Wildhacks-Node.git"
+  },
+  "keywords": [
+    "wildhacks"
+  ],
+  "author": "David and Alston",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/davidlky/Wildhacks-Node/issues"
+  },
+  "homepage": "https://github.com/davidlky/Wildhacks-Node#readme"
+}
